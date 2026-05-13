@@ -235,7 +235,7 @@ def reset_password(reset_data: schemas.PasswordReset, db: Session = Depends(get_
 # ==========================================
 # ROTAS DA BIBLIOTECA (UserGame)
 # ==========================================
-
+# Possibilidade do bastract factory
 @app.post("/biblioteca", response_model=schemas.UserGameResponse)
 def adicionar_ou_atualizar_jogo(
     game_data: schemas.UserGameCreate, 
@@ -246,7 +246,7 @@ def adicionar_ou_atualizar_jogo(
         models.UserGame.user_id == current_user.id,
         models.UserGame.game_id == game_data.game_id
     ).first()
-
+# Codigo decidindo na hora, o que salvar
     if jogo_existente:
         jogo_existente.status_principal = game_data.status_principal
         if game_data.titulo: jogo_existente.titulo = game_data.titulo
@@ -263,7 +263,7 @@ def adicionar_ou_atualizar_jogo(
         db.commit()
         db.refresh(jogo_existente)
         return jogo_existente
-    else:
+    else: # Varios campos preeenchidos manualmente
         novo_jogo = models.UserGame(
             user_id=current_user.id,
             game_id=game_data.game_id,

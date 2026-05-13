@@ -3,7 +3,10 @@ from sqlalchemy.orm import relationship, validates
 from abc import ABC, abstractmethod
 from .database import Base
 
-class IExportavel(ABC):
+
+
+
+class IExportavel(ABC): #interface  para as classes user, usergame e lista
     @abstractmethod
     def exportar_dados(self):
         """Método que toda classe que assinar este contrato deve ter"""
@@ -12,6 +15,35 @@ class IExportavel(ABC):
 def processar_exportacao(entidade: IExportavel):
     return entidade.exportar_dados()
 
+
+# ABSTRACT FACTORY IMPLEMENTACAO
+#
+
+class IGameDataBuscador(ABC):
+    """Contrato para processo de buscar as info basicas dos jogos na API externa"""
+    @abstractmethod
+    def buscar_detalhes_jogo(self, game_id: str):
+        pass
+
+class IPlayerStatusBuscador(ABC):
+    """Contrato para buscar as estatisticas do jogador na APi ecterna"""
+
+    @abstractmethod
+    def buscar_stats(self, player_id: str):
+        pass
+
+#
+# ABSTRACT FACTORY
+#
+
+class IPlataformaFactory(ABC):
+    """Contrato da fábrica -> definir o que todas as plataformas devem fornecer para nosso sistema"""
+    @abstractmethod
+    def criar_buscador_jogos(self) ->IGameDataBuscador:
+        pass
+    @abstractmethod
+    def criar_buscador_status(self) -> IPlayerStatusBuscador:
+        pass
 # ==========================================
 # MODELOS DO BANCO DE DADOS
 # ==========================================
